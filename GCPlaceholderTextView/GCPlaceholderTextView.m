@@ -107,7 +107,8 @@
 - (void) setTextColor:(UIColor *)textColor {
     if ([self.realText isEqualToString:self.placeholder]) {
         if ([textColor isEqual:self.placeholderColor]){
-             [super setTextColor:textColor];
+            self.realTextColor = textColor;
+            [super setTextColor:textColor];
         } else {
             self.realTextColor = textColor;
         }
