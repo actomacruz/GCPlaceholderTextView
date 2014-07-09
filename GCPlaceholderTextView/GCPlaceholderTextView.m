@@ -8,7 +8,10 @@
 
 #import "GCPlaceholderTextView.h"
 
-@interface GCPlaceholderTextView () 
+@interface GCPlaceholderTextView ()
+{
+    BOOL willUpdateRealTextColor;
+}
 
 @property (unsafe_unretained, nonatomic, readonly) NSString* realText;
 
@@ -28,6 +31,7 @@
 
 - (id) initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
+        willUpdateRealTextColor = YES;
         [self awakeFromNib];
     }
     return self;
@@ -100,6 +104,7 @@
 - (void) endEditing:(NSNotification*) notification {
     if ([self.realText isEqualToString:@""] || self.realText == nil) {
         super.text = self.placeholder;
+        willUpdateRealTextColor = NO;
         self.textColor = self.placeholderColor;
     }
 }
@@ -107,7 +112,12 @@
 - (void) setTextColor:(UIColor *)textColor {
     if ([self.realText isEqualToString:self.placeholder]) {
         if ([textColor isEqual:self.placeholderColor]){
-            self.realTextColor = textColor;
+            if (willUpdateRealTextColor) {
+                self.realTextColor = textColor;
+            }
+            else {
+                willUpdateRealTextColor = YES;
+            }
             [super setTextColor:textColor];
         } else {
             self.realTextColor = textColor;
